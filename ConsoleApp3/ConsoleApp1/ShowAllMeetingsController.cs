@@ -12,7 +12,7 @@ namespace ConsoleApp1
             repository = Factory.GetRepository();
         }
 
-        public IController ExecuteAction()
+        public IController ExecuteAction(ConsoleHelper helper = null)
         {
             var meetings = repository.GetAllMeetings();
             ShowAll(meetings);

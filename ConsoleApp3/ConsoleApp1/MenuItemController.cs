@@ -4,7 +4,7 @@ namespace ConsoleApp1
 {
     public class MenuItemController : IController
     {
-        public IController ExecuteAction()
+        public IController ExecuteAction(ConsoleHelper helper = null)
         {
             Menu();
 
