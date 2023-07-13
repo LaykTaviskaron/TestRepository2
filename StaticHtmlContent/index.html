@@ -5,11 +5,11 @@
     </title>
     <link href="Styles\main.css" rel="stylesheet">
 </head>
-<body>
+<body id="bodyId" onclick="">
     <h1 style="text-align: center;">Beetroot academy</h1>
 
     <h3 style="text-align: center;">Courses</h3>
-    <img src="https://lms.beetroot.academy/static/media/1.a1ff1c1e.svg" height="200" width="1000"/>
+    <img src="https://lms.beetroot.academy/static/media/1.a1ff1c1e.svg" height="200" width="1000" />
     <p>Here you can find the list of all courses:</p>
 
     <ul class="secondClass firstClass">
@@ -19,7 +19,13 @@
         <li>QA basics</li>
         <li>Project management basics</li>
     </ul>
+    <button id="customButtonForClicks" style="text-align:center;">Click me</button>
+    <button id="customButtonForChangingColor" style="text-align:center;">Change color</button>
+    <div id="lorem_ipsum"></div>
 
+    <div id="weatherForecastResponse"></div>
+    <input type="text" id="myCustomInput">
+    <a href="https://google.com">Link to google</a>
     <table class="myTable">
         <thead>
             <tr>
@@ -49,5 +55,70 @@
             </tr>
         </tbody>
     </table>
+    <script>
+        let counter = 0;
+        const loremIpsum = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus sollicitudin mi sed finibus vestibulum. Cras pulvinar sed ligula nec dictum. Proin id purus nisl. Vestibulum ut neque ac nibh suscipit vehicula vitae non enim. Morbi finibus malesuada nulla, sed tristique massa facilisis a. Sed molestie dolor eget pulvinar venenatis. Donec sit amet justo purus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. In hac habitasse platea dictumst. Sed magna lorem, auctor eu cursus in, maximus non nulla.";
+
+        function onButtonMouseOver(e) {
+            //debugger;
+
+            alert('mouse over')
+        }
+
+        function onSizeChanged(e) {
+            debugger;
+
+            alert('window was resized')
+        }
+
+        function onInputChanged(e) {
+            debugger;
+            
+            alert('on change event')
+        }
+
+
+        function alertWhenBodyIsClicked(e) {
+            return;
+            debugger;
+            if (e.target.id === 'customButtonForClicks') {
+                return;
+            }
+            counter++;
+            document.getElementById('customButtonForClicks').innerText = "Click me " + counter;
+            document.getElementById('lorem_ipsum').innerHTML += "<button id=\"" + counter + "\">Click me again</button><br>" + loremIpsum + "<br>";
+        }
+
+        function alertWhenButtonIsClicked(e) {
+            debugger;
+            counter++;
+            document.getElementById('customButtonForClicks').innerText = "Click me " + counter;
+            document.getElementById('lorem_ipsum').innerHTML += "<button id=\"" + counter + "\">Click me again</button><br>" + loremIpsum + "<br>";
+            return false;
+        }
+
+        function changeColor(e) {
+            if (counter % 2 === 0) {
+                document.getElementById('customButtonForClicks').style = "color:blue";
+            } else {
+                document.getElementById('customButtonForClicks').style = "color:red";
+            }
+        }
+
+        document.getElementById('bodyId').onclick = alertWhenBodyIsClicked;
+        document.getElementById('customButtonForClicks').onclick = alertWhenButtonIsClicked;
+        document.getElementById('customButtonForClicks').onmouseover = onButtonMouseOver;
+        document.getElementById('myCustomInput').onchange = onInputChanged;
+        document.getElementById('customButtonForChangingColor').onclick = changeColor;
+        function httpGet(elementId) {
+            debugger;
+            var xmlHttp = new XMLHttpRequest();
+            xmlHttp.open("GET", "https://minfin.com.ua/", false); // false for synchronous request
+            xmlHttp.send(null);
+            document.getElementById(elementId).innerHTML = xmlHttp.responseText;
+        }
+
+        window.onresize = onSizeChanged;
+    </script>
 </body>
 </html>
