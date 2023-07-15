@@ -6,119 +6,139 @@
     <link href="Styles\main.css" rel="stylesheet">
 </head>
 <body id="bodyId" onclick="">
-    <h1 style="text-align: center;">Beetroot academy</h1>
+    <form id="userForm">
+        <label>Login: </label>
+        <input id="login" required />
+        <br />
+        <label>Password: </label>
+        <input id="password" placeholder="not bigger than 10 symbols" type="password" required maxlength="10" />
+        <br />
+        <label>Date of birth: </label>
+        <input id="dateOfBirth" type="date" />
+        <br />
+        <label>Email: </label>
+        <input id="email" type="email" />
+        <br />
+        <label>Year of birth: </label>
+        <input id="yearOfBirth" type="number" min="1900" max="2020" />
+        <br />
+        <label>Color of product: </label>
+        <input id="color" type="color" />
+        <br />        
+        <label>Delivery: </label>
+        <input type="radio" id="newPost" name="delivery" value="NovaPoshta" />
+        <label for="newPost">Nova Poshta</label>
+        <input type="radio" id="yourself" name="delivery" value="Yourself" />
+        <label for="yourself">Samostiyno</label>
+        <input type="radio" id="courier" name="delivery" value="Courier" />
+        <label for="courier">Courier</label>
+        <br />
+        <label>Inform me: </label>
+        <input id="sendEmail" type="checkbox" value="SendEmail" />
+        <label>Via email</label>
+        <input id="sendSms" type="checkbox" value="SendSms" />
+        <label>Via sms</label>
+        <input id="sendViber" type="checkbox" value="SendViber" />
+        <label>Via Viber</label>
+        <br />
+        <label>Attachment: </label>
+        <input id="file" type="file" />
+        <br />
+        <input id="hiddenField" type="hidden" value="uncahged value" />
+        <br />
 
-    <h3 style="text-align: center;">Courses</h3>
-    <img src="https://lms.beetroot.academy/static/media/1.a1ff1c1e.svg" height="200" width="1000" />
-    <p>Here you can find the list of all courses:</p>
-
-    <ul class="secondClass firstClass">
-        <li>C# basics</li>
-        <li>Java basics</li>
-        <li>Python basics</li>
-        <li>QA basics</li>
-        <li>Project management basics</li>
-    </ul>
-    <button id="customButtonForClicks" style="text-align:center;">Click me</button>
-    <button id="customButtonForChangingColor" style="text-align:center;">Change color</button>
-    <div id="lorem_ipsum"></div>
-
-    <div id="weatherForecastResponse"></div>
-    <input type="text" id="myCustomInput">
-    <a href="https://google.com">Link to google</a>
-    <table class="myTable">
-        <thead>
-            <tr>
-                <th>All courses</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td id="csharp">C# basics</td>
-                <td>32 Lessons</td>
-            </tr>
-            <tr>
-                <td>Java basics</td>
-                <td>36 Lessons</td>
-            </tr>
-            <tr>
-                <td>Python basics</td>
-                <td>26 Lessons</td>
-            </tr>
-            <tr>
-                <td>QA basics</td>
-                <td>30 Lessons</td>
-            </tr>
-            <tr>
-                <td>Project management basics</td>
-                <td>36 Lessons</td>
-            </tr>
-        </tbody>
-    </table>
+        <input type="button" value="Cancel" id="cancel" alt="description of button" onlick="saveToLocalstorage('test', 'test value')">
+        <input type="submit" id="submitForm" value="Send Request">
+    </form>
     <script>
-        let counter = 0;
-        const loremIpsum = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus sollicitudin mi sed finibus vestibulum. Cras pulvinar sed ligula nec dictum. Proin id purus nisl. Vestibulum ut neque ac nibh suscipit vehicula vitae non enim. Morbi finibus malesuada nulla, sed tristique massa facilisis a. Sed molestie dolor eget pulvinar venenatis. Donec sit amet justo purus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. In hac habitasse platea dictumst. Sed magna lorem, auctor eu cursus in, maximus non nulla.";
 
-        function onButtonMouseOver(e) {
-            //debugger;
-
-            alert('mouse over')
-        }
-
-        function onSizeChanged(e) {
+        function saveForm(e) {
             debugger;
 
-            alert('window was resized')
-        }
+            let login = getElementValue("login");
+            let pass = getElementValue("password");
+            let email = getElementValue("email");
+            let dateOfBirth = getElementValue("dateOfBirth");
+            let color = getElementValue("color");
+            let yearOfBirth = getElementValue("yearOfBirth");
+            let file = getElementValue("file");
+            let hiddenField = getElementValue("hiddenField");
 
-        function onInputChanged(e) {
-            debugger;
-            
-            alert('on change event')
-        }
 
-
-        function alertWhenBodyIsClicked(e) {
-            return;
-            debugger;
-            if (e.target.id === 'customButtonForClicks') {
-                return;
+            let delivery = getRadioButtonValue("newPost", "yourself", "courier");
+            if (isItemChecked("sendSms")) {
+                let sendSms = getElementValue("sendSms");
             }
-            counter++;
-            document.getElementById('customButtonForClicks').innerText = "Click me " + counter;
-            document.getElementById('lorem_ipsum').innerHTML += "<button id=\"" + counter + "\">Click me again</button><br>" + loremIpsum + "<br>";
-        }
+            if (isItemChecked("sendViber")) {
+                let sendViber = getElementValue("sendViber");
+            }
+            if (isItemChecked("sendEmail")) {
+                let sendEmail = getElementValue("sendEmail");
+            }
 
-        function alertWhenButtonIsClicked(e) {
+            let userObj = {
+                login: login,
+                password: pass,
+                email: email,
+                dateOfBirth: dateOfBirth,
+                color: color,
+                yearOfBirth: yearOfBirth,
+                file: file,
+                hiddenField: hiddenField,
+                delivery: delivery
+            };
+
             debugger;
-            counter++;
-            document.getElementById('customButtonForClicks').innerText = "Click me " + counter;
-            document.getElementById('lorem_ipsum').innerHTML += "<button id=\"" + counter + "\">Click me again</button><br>" + loremIpsum + "<br>";
-            return false;
-        }
-
-        function changeColor(e) {
-            if (counter % 2 === 0) {
-                document.getElementById('customButtonForClicks').style = "color:blue";
+            let jsonVal;
+            let existingArray = getFromLocalstorage('usersArray');
+            if (existingArray === "") {
+                jsonVal = JSON.stringify([userObj]);
             } else {
-                document.getElementById('customButtonForClicks').style = "color:red";
+                let arr = JSON.parse(existingArray);
+                arr.push(userObj);
+                jsonVal = JSON.stringify(arr);
             }
+
+            saveToLocalstorage('usersArray', jsonVal);
+
+            return true;
         }
 
-        document.getElementById('bodyId').onclick = alertWhenBodyIsClicked;
-        document.getElementById('customButtonForClicks').onclick = alertWhenButtonIsClicked;
-        document.getElementById('customButtonForClicks').onmouseover = onButtonMouseOver;
-        document.getElementById('myCustomInput').onchange = onInputChanged;
-        document.getElementById('customButtonForChangingColor').onclick = changeColor;
-        function httpGet(elementId) {
+        function isItemChecked(id) {
+            return document.getElementById(id).checked;
+        }
+
+        function getRadioButtonValue(a, b, c) {
+            if (document.getElementById(a).checked) {
+                return getElementValue(a);
+            } else if (document.getElementById(b).checked) {
+                return getElementValue(b);
+            } else if (document.getElementById(c).checked) {
+                return getElementValue(c);
+            }
+
+            return;
+        }
+
+        function getElementValue(elementId) {
+            return document.getElementById(elementId).value;
+        }
+
+        function saveToLocalstorage(key, value) {
             debugger;
-            var xmlHttp = new XMLHttpRequest();
-            xmlHttp.open("GET", "https://minfin.com.ua/", false); // false for synchronous request
-            xmlHttp.send(null);
-            document.getElementById(elementId).innerHTML = xmlHttp.responseText;
+
+            localStorage.setItem(key, value);
         }
 
-        window.onresize = onSizeChanged;
+        function getFromLocalstorage(key) {
+            debugger;
+
+            return localStorage.getItem(key);
+        }
+
+        document.getElementById("cancel").onclick = saveToLocalstorage;
+        document.getElementById("submitForm").onclick = saveForm;
+
     </script>
 </body>
 </html>
