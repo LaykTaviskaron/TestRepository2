@@ -1,0 +1,34 @@
+﻿@model PersonsModel
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Email</th>
+                <th>FirstName</th>
+                <th>LastName</th>
+                <th>Age</th>
+                <th>View</th>
+                <th>Update</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var person in Model.PersonsList)
+            {
+                <tr>
+                    <td>@person.Email</td>
+                    <td>@person.FirstName</td>
+                    <td>@person.LastName</td>
+                    <td>@person.Age</td>
+                    <td class="text-center"><a href="#" class="btn btn-primary">View</a></td>
+                    <td class="text-center"><a href="#" class="btn btn-primary">Edit</a></td>
+                    <td class="text-center"><a href="#" class="btn btn-danger">Delete</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,35 @@
+﻿@model Person
+@{
+    ViewData["Title"] = "Create Person";
+}
+
+<h1>CreatePerson</h1>
+
+<div class="myform">
+    <h1 class="display-4">Simple form</h1>
+
+    <form asp-action="create" method="post">
+        <div class="myforma">
+            <label asp-for="FirstName" class="">Your name:</label>
+            <input asp-for="FirstName" />
+        </div>
+        <div class="myforma">
+            <label asp-for="LastName" class="">Your last name:</label>
+            <input asp-for="LastName" />
+        </div>
+        <div class="myforma">
+            <label asp-for="Email">Your email:</label>
+            <input asp-for="Email" />
+        </div>
+        <div class="myforma">
+            <label asp-for="Age">Your age:</label>
+            <input asp-for="Age" />
+        </div>
+        <div>
+            <p></p>
+            <button type="submit">Submit form</button>
+            <p></p>
+        </div>
+
+    </form>
+
