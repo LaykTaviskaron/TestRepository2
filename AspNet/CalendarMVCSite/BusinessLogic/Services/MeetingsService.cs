@@ -1,9 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using BusinessLogic.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Models;
 
 namespace BusinessLogic.Services
 {
-    public class MeetingsService
+    public class MeetingsService : IMeetingsService
     {
         private readonly CalendarDbContext _calendar;
 
@@ -19,7 +20,7 @@ namespace BusinessLogic.Services
 
         public Guid Create(Meeting meeting) 
         { 
-            _calendar.Add(meeting);
+            _calendar.Meetings.Add(meeting);
 
             var result = _calendar.SaveChanges();
 
@@ -37,7 +38,7 @@ namespace BusinessLogic.Services
 
             if (endDate != null)
             {
-                baseQuery = baseQuery.Where(x => x.EndDate >= endDate);
+                baseQuery = baseQuery.Where(x => x.EndDate <= endDate);
             }
 
             return baseQuery.ToList();

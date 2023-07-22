@@ -1,5 +1,5 @@
 ﻿using BusinessLogic;
-using BusinessLogic.Services;
+using BusinessLogic.Interfaces;
 using CalendarMVCSite.Models;
 using Microsoft.AspNetCore.Mvc;
 using Models;
@@ -9,12 +9,12 @@ namespace CalendarMVCSite.Controllers
     public class MeetingController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly MeetingsService _meetingService;
+        private readonly IMeetingsService _meetingService;
 
-        public MeetingController(ILogger<HomeController> logger, CalendarDbContext calendar)
+        public MeetingController(ILogger<HomeController> logger, CalendarDbContext calendar, IMeetingsService meetingService)
         {
             _logger = logger;
-            _meetingService = new MeetingsService(calendar);
+            _meetingService = meetingService;
         }
 
         public IActionResult Index()

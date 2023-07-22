@@ -1,4 +1,6 @@
 using BusinessLogic;
+using BusinessLogic.Services;
+using BusinessLogic.Interfaces;
 using CalendarMVCSite.Filters;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,6 +11,8 @@ builder.Services.AddControllersWithViews(options =>
 {
     options.Filters.Add<ExceptionFilter>();
 });
+
+builder.Services.AddScoped<IMeetingsService, MeetingsService>();
 
 builder.Host.ConfigureLogging(logging =>
 {
