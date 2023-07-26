@@ -3,8 +3,10 @@ using BusinessLogic.Services;
 using BusinessLogic.Interfaces;
 using CalendarMVCSite.Filters;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Host.UseSerilog();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews(options =>
@@ -14,11 +16,18 @@ builder.Services.AddControllersWithViews(options =>
 
 builder.Services.AddScoped<IMeetingsService, MeetingsService>();
 
-builder.Host.ConfigureLogging(logging =>
-{
-    logging.ClearProviders();
-    logging.AddConsole();
-});
+var logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .Enrich.FromLogContext()
+    .CreateLogger();
+builder.Logging.ClearProviders();
+builder.Logging.AddSerilog(logger);
+
+//builder.Host.ConfigureLogging(logging =>
+//{
+//    logging.ClearProviders();
+//    logging.AddConsole();
+//});
 
 ConfigureServices(builder.Services, builder.Configuration);
 
@@ -29,8 +38,9 @@ if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
 }
-app.UseStaticFiles();
 
+app.UseStaticFiles();
+app.UseSerilogRequestLogging();
 
 
 app.UseRouting();

@@ -19,7 +19,8 @@ namespace BusinessLogic.Services
         }
 
         public Guid Create(Meeting meeting) 
-        { 
+        {
+            throw new ArgumentException("meeting");
             _calendar.Meetings.Add(meeting);
 
             var result = _calendar.SaveChanges();

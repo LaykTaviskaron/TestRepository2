@@ -3,6 +3,10 @@ using BusinessLogic.Interfaces;
 using CalendarMVCSite.Models;
 using Microsoft.AspNetCore.Mvc;
 using Models;
+using Serilog;
+using Serilog.Core;
+using Serilog.Events;
+using Serilog.Formatting.Json;
 
 namespace CalendarMVCSite.Controllers
 {
@@ -10,11 +14,13 @@ namespace CalendarMVCSite.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IMeetingsService _meetingService;
+        private readonly Serilog.ILogger _serilogLogger;
 
         public MeetingController(ILogger<HomeController> logger, CalendarDbContext calendar, IMeetingsService meetingService)
         {
             _logger = logger;
             _meetingService = meetingService;
+            //_serilogLogger = serilogLogger;
         }
 
         public IActionResult Index()
@@ -39,13 +45,21 @@ namespace CalendarMVCSite.Controllers
         {
             if (model != null)
             {
-                _meetingService.Create(new Meeting
+                try
                 {
-                    Id = Guid.NewGuid(),
-                    StartDate = model.StartDate.Value,
-                    EndDate = model.EndDate.Value,
-                    Name = model.Name
-                });
+                    _meetingService.Create(new Meeting
+                    {
+                        Id = Guid.NewGuid(),
+                        StartDate = model.StartDate.Value,
+                        EndDate = model.EndDate.Value,
+                        Name = model.Name
+                    });
+                }
+                catch (Exception e)
+                {
+                    //_logger.Log("Request failed.");
+                    _logger.LogError(e, "Request failed. Request details: {@model}", model);
+                }
             }
             else
             {
