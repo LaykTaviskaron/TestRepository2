@@ -7,7 +7,7 @@
 
 <div class="myform">
     <h1 class="display-4">Create meeting</h1>
-
+    @Html.ValidationSummary()
     <form asp-action="create" method="post">
         <div class="myforma">
             <label asp-for="Name" class="">Name:</label>

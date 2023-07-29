@@ -4,6 +4,9 @@ using BusinessLogic.Interfaces;
 using CalendarMVCSite.Filters;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
+using FluentValidation;
+using System;
+using CalendarMVCSite.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSerilog();
@@ -59,4 +62,6 @@ static void ConfigureServices(IServiceCollection services, IConfiguration config
     {
         options.UseInMemoryDatabase("PersonDbContext");
     });
+
+    services.AddScoped<IValidator<CreateMeetingModel>, CreateMeetingModelValidator>();
 }

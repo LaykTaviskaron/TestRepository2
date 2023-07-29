@@ -1,6 +1,7 @@
 ﻿using BusinessLogic;
 using BusinessLogic.Interfaces;
 using CalendarMVCSite.Models;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using Serilog;
@@ -12,15 +13,17 @@ namespace CalendarMVCSite.Controllers
 {
     public class MeetingController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ILogger<MeetingController> _logger;
         private readonly IMeetingsService _meetingService;
         private readonly Serilog.ILogger _serilogLogger;
+        private readonly IValidator<CreateMeetingModel> _validator;
 
-        public MeetingController(ILogger<HomeController> logger, CalendarDbContext calendar, IMeetingsService meetingService)
+        public MeetingController(ILogger<MeetingController> logger, CalendarDbContext calendar, IMeetingsService meetingService, IValidator<CreateMeetingModel> validator)
         {
             _logger = logger;
             _meetingService = meetingService;
             //_serilogLogger = serilogLogger;
+            _validator = validator;
         }
 
         public IActionResult Index()
@@ -43,7 +46,8 @@ namespace CalendarMVCSite.Controllers
         [HttpPost]
         public IActionResult Create([FromForm] CreateMeetingModel model)
         {
-            if (model != null)
+            var validationResult = _validator.Validate(model);
+            if (validationResult.IsValid)
             {
                 try
                 {
@@ -60,13 +64,13 @@ namespace CalendarMVCSite.Controllers
                     //_logger.Log("Request failed.");
                     _logger.LogError(e, "Request failed. Request details: {@model}", model);
                 }
+
+                return Redirect("Index");
             }
             else
             {
-                throw new ArgumentException("Invalid input");
+                return View();
             }
-
-            return Redirect("Index");
         }
     }
 }
