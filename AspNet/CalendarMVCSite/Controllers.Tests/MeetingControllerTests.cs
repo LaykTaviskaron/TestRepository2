@@ -26,8 +26,9 @@ namespace Controllers.Tests
             var dbContext = InitHelpers.GetDbContext();
             var meetingService = new Mock<IMeetingsService>();
             var validator = new CreateMeetingModelValidator();
+            var editValidator = new EditMeetingModelValidator();
 
-            var service = new MeetingController(logger.Object, dbContext.Object, meetingService.Object, validator);
+            var service = new MeetingController(logger.Object, dbContext.Object, meetingService.Object, validator, editValidator);
 
             // Act
             var result = service.Create(new CreateMeetingModel 
@@ -65,8 +66,10 @@ namespace Controllers.Tests
             //validatorMock.Setup(c => c.Validate(model)).Verifiable();
 
             var validator = new CreateMeetingModelValidator();
+            var editValidator = new EditMeetingModelValidator();
 
-            var service = new MeetingController(logger.Object, dbContext.Object, meetingService.Object, validator);
+            var service = new MeetingController(logger.Object, dbContext.Object, meetingService.Object, validator, editValidator);
+
             // Act
             var result = service.Create(model);
 

@@ -3,8 +3,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace CalendarMVCSite.Models
 {
-    public class CreateMeetingModel
+    public class EditMeetingModel
     {
+        public Guid Id { get; set; }
         public string Name { get; set; }
 
         public DateTime? StartDate { get; set; }
@@ -12,9 +13,9 @@ namespace CalendarMVCSite.Models
         public DateTime? EndDate { get; set; }
     }
 
-    public class CreateMeetingModelValidator : AbstractValidator<CreateMeetingModel>
+    public class EditMeetingModelValidator : AbstractValidator<EditMeetingModel>
     {
-        public CreateMeetingModelValidator()
+        public EditMeetingModelValidator()
         {
             RuleFor(x => x.Name).NotEmpty().MaximumLength(30).MinimumLength(2);
             RuleFor(x => x.StartDate).NotEmpty();

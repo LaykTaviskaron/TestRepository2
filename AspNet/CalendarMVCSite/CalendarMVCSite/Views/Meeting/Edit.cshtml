@@ -1,0 +1,31 @@
+﻿@model EditMeetingModel
+@{
+    ViewData["Title"] = "Edit meeting";
+}
+
+<h1>Edit Meeting</h1>
+
+<div class="myform">
+    <h1 class="display-4">Edit meeting</h1>
+    @Html.ValidationSummary()
+    <form asp-action="edit" method="post">
+        <input asp-for="Id" type="hidden" />
+        <div class="myforma">
+            <label asp-for="Name" class="">Name:</label>
+            <input asp-for="Name" />
+        </div>
+        <div class="myforma">
+            <label asp-for="StartDate" class="">Start:</label>
+            <input type="datetime-local" asp-for="StartDate" />
+        </div>
+        <div class="myforma">
+            <label asp-for="EndDate">End:</label>
+            <input type="datetime-local" asp-for="EndDate" />
+        </div>
+        <div>
+            <p></p>
+                <button type="submit">Edit</button>
+            <p></p>
+        </div>
+    </form>
+

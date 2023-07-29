@@ -18,9 +18,36 @@ namespace BusinessLogic.Services
             return _calendar.Meetings.ToList();
         }
 
+        public Meeting GetById(Guid id)
+        {
+            var result = _calendar.Meetings.FirstOrDefault(x => x.Id == id);
+            if (result == null)
+            {
+                throw new ArgumentException("No such id exists");
+            }
+
+            return result;
+        }
+
+        public Meeting Edit(Meeting meeting)
+        {
+            var existingMeeting = _calendar.Meetings.FirstOrDefault(x => x.Id == meeting.Id);
+            if (existingMeeting == null)
+            {
+                throw new ArgumentException("No such id exists");
+            }
+
+            existingMeeting.Name = meeting.Name;
+            existingMeeting.StartDate = meeting.StartDate;
+            existingMeeting.EndDate = meeting.EndDate;
+
+            _calendar.SaveChanges();
+
+            return existingMeeting;
+        }
+
         public Guid Create(Meeting meeting) 
         {
-            throw new ArgumentException("meeting");
             _calendar.Meetings.Add(meeting);
 
             var result = _calendar.SaveChanges();

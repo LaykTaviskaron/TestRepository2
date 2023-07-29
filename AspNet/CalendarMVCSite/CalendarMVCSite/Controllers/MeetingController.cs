@@ -17,13 +17,20 @@ namespace CalendarMVCSite.Controllers
         private readonly IMeetingsService _meetingService;
         private readonly Serilog.ILogger _serilogLogger;
         private readonly IValidator<CreateMeetingModel> _validator;
+        private readonly IValidator<EditMeetingModel> _editMeetingValidator;
 
-        public MeetingController(ILogger<MeetingController> logger, CalendarDbContext calendar, IMeetingsService meetingService, IValidator<CreateMeetingModel> validator)
+        public MeetingController(
+            ILogger<MeetingController> logger, 
+            CalendarDbContext calendar, 
+            IMeetingsService meetingService, 
+            IValidator<CreateMeetingModel> validator, 
+            IValidator<EditMeetingModel> editMeetingValidator)
         {
             _logger = logger;
             _meetingService = meetingService;
             //_serilogLogger = serilogLogger;
             _validator = validator;
+            _editMeetingValidator = editMeetingValidator;
         }
 
         public IActionResult Index()
@@ -35,6 +42,52 @@ namespace CalendarMVCSite.Controllers
             model.Meetings = meetings;
 
             return View(model);
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult Edit(Guid id)
+        {
+            var meeting = _meetingService.GetById(id);
+
+            var meetingModel = new EditMeetingModel
+            {
+                Id = id,
+                EndDate = meeting.EndDate,
+                StartDate = meeting.StartDate,
+                Name = meeting.Name
+            };
+
+            return View(meetingModel);
+        }
+
+        [HttpPost]
+        public IActionResult Edit([FromForm] EditMeetingModel model)
+        {
+            var validationResult = _editMeetingValidator.Validate(model);
+            if (validationResult.IsValid)
+            {
+                try
+                {
+                    _meetingService.Edit(new Meeting
+                    {
+                        Id = model.Id,
+                        StartDate = model.StartDate.Value,
+                        EndDate = model.EndDate.Value,
+                        Name = model.Name
+                    });
+                }
+                catch (Exception e)
+                {
+                    //_logger.Log("Request failed.");
+                    _logger.LogError(e, "Request failed. Request details: {@model}", model);
+                }
+
+                return Redirect("Index");
+            }
+            else
+            {
+                return View();
+            }
         }
 
         [HttpGet]
