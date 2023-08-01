@@ -9,5 +9,6 @@ namespace BusinessLogic.Interfaces
         IEnumerable<Meeting> GetByDateRange(DateTime? startDate, DateTime? endDate);
         Meeting GetById(Guid id);
         Meeting Edit(Meeting meeting);
+        void DeleteById(Guid id);
     }
 }

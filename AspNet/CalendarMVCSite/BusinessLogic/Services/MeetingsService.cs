@@ -29,6 +29,18 @@ namespace BusinessLogic.Services
             return result;
         }
 
+        public void DeleteById(Guid id)
+        {
+            var existingItem = _calendar.Meetings.FirstOrDefault(x => x.Id == id);
+            if (existingItem == null)
+            {
+                throw new ArgumentException("No such id exists");
+            }
+
+            _calendar.Meetings.Remove(existingItem);
+            _calendar.SaveChanges();
+        }
+
         public Meeting Edit(Meeting meeting)
         {
             var existingMeeting = _calendar.Meetings.FirstOrDefault(x => x.Id == meeting.Id);

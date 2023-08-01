@@ -11,6 +11,7 @@ using Serilog.Formatting.Json;
 
 namespace CalendarMVCSite.Controllers
 {
+    [Route("meeting")]
     public class MeetingController : Controller
     {
         private readonly ILogger<MeetingController> _logger;
@@ -33,6 +34,7 @@ namespace CalendarMVCSite.Controllers
             _editMeetingValidator = editMeetingValidator;
         }
 
+        [HttpGet("")]
         public IActionResult Index()
         {
             var model = new IndexViewModel();
@@ -44,7 +46,7 @@ namespace CalendarMVCSite.Controllers
             return View(model);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("edit/{id}")]
         public IActionResult Edit(Guid id)
         {
             var meeting = _meetingService.GetById(id);
@@ -60,8 +62,8 @@ namespace CalendarMVCSite.Controllers
             return View(meetingModel);
         }
 
-        [HttpPost]
-        public IActionResult Edit([FromForm] EditMeetingModel model)
+        [HttpPost("edit/{id}")]
+        public IActionResult Edit(Guid id, [FromForm] EditMeetingModel model)
         {
             var validationResult = _editMeetingValidator.Validate(model);
             if (validationResult.IsValid)
@@ -82,21 +84,45 @@ namespace CalendarMVCSite.Controllers
                     _logger.LogError(e, "Request failed. Request details: {@model}", model);
                 }
 
-                return Redirect("Index");
+                return RedirectToAction("Index", "Meeting");
             }
             else
             {
-                return View();
+                return View(model);
             }
         }
 
-        [HttpGet]
+        [HttpGet("delete/{id}")]
+        public IActionResult Delete(Guid id)
+        {
+            var meeting = _meetingService.GetById(id);
+
+            return View();
+        }
+
+        [HttpPost("Delete/{id}")]
+        public IActionResult ConfirmDeletion(Guid id)
+        {
+            try
+            {
+                _meetingService.DeleteById(id);
+            }
+            catch (Exception e)
+            {
+                //_logger.Log("Request failed.");
+                _logger.LogError(e, "Request failed. Request details: {id}", id);
+            }
+
+            return RedirectToAction("Index", "Meeting");
+        }
+
+        [HttpGet("create")]
         public IActionResult Create()
         {
             return View();
         }
 
-        [HttpPost]
+        [HttpPost("create")]
         public IActionResult Create([FromForm] CreateMeetingModel model)
         {
             var validationResult = _validator.Validate(model);
@@ -118,11 +144,11 @@ namespace CalendarMVCSite.Controllers
                     _logger.LogError(e, "Request failed. Request details: {@model}", model);
                 }
 
-                return Redirect("Index");
+                return RedirectToAction("Index", "Meeting");
             }
             else
             {
-                return View();
+                return View(model);
             }
         }
     }
