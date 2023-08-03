@@ -16,11 +16,12 @@
         </div>
         <div class="myforma">
             <label asp-for="StartDate" class="">Start:</label>
-            <input type="datetime-local" asp-for="StartDate" />
+            <input type="datetime-local" min="@DateTime.Now.Date.ToShortTimeString()"                 
+                   step="900" asp-for="StartDate" />
         </div>
         <div class="myforma">
             <label asp-for="EndDate">End:</label>
-            <input type="datetime-local" asp-for="EndDate" />
+            <input type="datetime-local" step="900" asp-for="EndDate" />
         </div>
         <div>
             <p></p>

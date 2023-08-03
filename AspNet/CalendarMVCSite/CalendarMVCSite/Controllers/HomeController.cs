@@ -18,13 +18,7 @@ namespace CalendarMVCSite.Controllers
 
         public IActionResult Index()
         {
-            var model = new IndexViewModel();
-
-            var meetings = _calendar.Meetings.ToList();
-
-            model.Meetings = meetings;
-
-            return View(model);
+            return RedirectToAction("Index", "Meeting");
         }
 
         public IActionResult Privacy()

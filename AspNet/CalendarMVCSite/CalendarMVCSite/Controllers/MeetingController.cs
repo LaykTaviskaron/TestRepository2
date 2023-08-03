@@ -46,6 +46,65 @@ namespace CalendarMVCSite.Controllers
             return View(model);
         }
 
+        [HttpGet("day/{day}")]
+        public IActionResult Daily(DateTime? day)
+        {
+            var model = new DailyViewModel();
+
+            if (day == null || !day.HasValue)
+            {
+                model.Meetings = _meetingService.GetAll();
+            }
+            else
+            {
+                var start = day.Value.Date;
+                var end = start.AddDays(1).AddTicks(-1);
+                model.Meetings = _meetingService.GetByDateRange(start, end);
+            }
+
+            return View(model);
+        }
+
+        [HttpGet("week/{startDay}")]
+        public IActionResult Weekly(DateTime? startDay)
+        {
+            var model = new DailyViewModel();
+
+            if (startDay == null || !startDay.HasValue)
+            {
+                model.Meetings = _meetingService.GetAll();
+            }
+            else
+            {
+                var start = startDay.Value.Date;
+                var end = start.AddDays(7).AddTicks(-1);
+                model.Meetings = _meetingService.GetByDateRange(start, end);
+            }
+
+            return View(model);
+        }
+
+        [HttpGet("month/{startDay}")]
+        public IActionResult Monthly(DateTime? startDay)
+        {
+            var model = new DailyViewModel();
+
+            if (startDay == null || !startDay.HasValue)
+            {
+                model.Meetings = _meetingService.GetAll();
+            }
+            else
+            {
+                var startDayValue = startDay.Value;
+                var firstDayOfMonth = new DateTime(startDayValue.Year, startDayValue.Month, 1);
+                var lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddTicks(-1);
+                model.Meetings = _meetingService.GetByDateRange(firstDayOfMonth, lastDayOfMonth);
+            }
+
+            return View(model);
+        }
+
+
         [HttpGet("edit/{id}")]
         public IActionResult Edit(Guid id)
         {
@@ -150,6 +209,22 @@ namespace CalendarMVCSite.Controllers
             {
                 return View(model);
             }
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult Details(Guid id)
+        {
+            var meeting = _meetingService.GetById(id);
+
+            var meetingModel = new MeetingViewModel
+            {
+                Id = id,
+                EndDate = meeting.EndDate,
+                StartDate = meeting.StartDate,
+                Name = meeting.Name
+            };
+
+            return View(meetingModel);
         }
     }
 }
