@@ -17,8 +17,9 @@ namespace CalendarMVCSite.Controllers
         private readonly ILogger<MeetingController> _logger;
         private readonly IMeetingsService _meetingService;
         private readonly Serilog.ILogger _serilogLogger;
-        private readonly IValidator<CreateMeetingModel> _validator;
+        private readonly IValidator<CreateMeetingModel> _createMeetingValidator;
         private readonly IValidator<EditMeetingModel> _editMeetingValidator;
+        private readonly IValidator<CreateRecurrentMeetingModel> _createRecurrentMeetingValidator;
 
         public MeetingController(
             ILogger<MeetingController> logger, 
@@ -30,7 +31,7 @@ namespace CalendarMVCSite.Controllers
             _logger = logger;
             _meetingService = meetingService;
             //_serilogLogger = serilogLogger;
-            _validator = validator;
+            _createMeetingValidator = validator;
             _editMeetingValidator = editMeetingValidator;
         }
 
@@ -184,7 +185,7 @@ namespace CalendarMVCSite.Controllers
         [HttpPost("create")]
         public IActionResult Create([FromForm] CreateMeetingModel model)
         {
-            var validationResult = _validator.Validate(model);
+            var validationResult = _createMeetingValidator.Validate(model);
             if (validationResult.IsValid)
             {
                 try
@@ -194,7 +195,40 @@ namespace CalendarMVCSite.Controllers
                         Id = Guid.NewGuid(),
                         StartDate = model.StartDate.Value,
                         EndDate = model.EndDate.Value,
-                        Name = model.Name
+                        Name = model.Name,
+                        CreatedAt = DateTime.UtcNow
+                    });
+                }
+                catch (Exception e)
+                {
+                    //_logger.Log("Request failed.");
+                    _logger.LogError(e, "Request failed. Request details: {@model}", model);
+                }
+
+                return RedirectToAction("Index", "Meeting");
+            }
+            else
+            {
+                return View(model);
+            }
+        }
+
+        [HttpPost("createRecurrentMeeting")]
+        public IActionResult CreateRecurrentMeeting([FromForm] CreateRecurrentMeetingModel model)
+        {
+            var validationResult = _createRecurrentMeetingValidator.Validate(model);
+            if (validationResult.IsValid)
+            {
+                try
+                {
+                    _meetingService.Create(new RecurrencySetting
+                    {
+                        Id = Guid.NewGuid(),
+                        StartDate = model.StartDate.Value,
+                        EndDate = model.EndDate.Value,
+                        Name = model.Name,
+                        RepeatInterval = model.RepeatInterval,
+                        RepeatUntil = model.RepeatUntil
                     });
                 }
                 catch (Exception e)

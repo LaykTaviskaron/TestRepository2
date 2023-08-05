@@ -10,5 +10,6 @@ namespace BusinessLogic.Interfaces
         Meeting GetById(Guid id);
         Meeting Edit(Meeting meeting);
         void DeleteById(Guid id);
+        Guid Create(RecurrencySetting setting);
     }
 }

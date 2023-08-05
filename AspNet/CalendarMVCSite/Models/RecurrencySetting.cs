@@ -1,12 +1,10 @@
 ﻿namespace Models
 {
-    public class Meeting
+    public class RecurrencySetting
     {
         public Guid Id { get; set; }
 
         public string Name { get; set; }
-
-        public DateTime CreatedAt { get; set; }
 
         public DateTime StartDate { get; set; }
 
@@ -14,6 +12,8 @@
 
         public Room Room { get; set; }
 
-        public RecurrencySetting RecurrencySetting { get; set; }
+        public RepeatInterval RepeatInterval { get; set; }
+
+        public DateTime RepeatUntil { get; set; }
     }
 }
