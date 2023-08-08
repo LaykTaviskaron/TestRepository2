@@ -11,5 +11,6 @@ namespace BusinessLogic.Interfaces
         Meeting Edit(Meeting meeting);
         void DeleteById(Guid id);
         Guid Create(RecurrencySetting setting);
+        RecurrencySetting Edit(RecurrencySetting setting);
     }
 }

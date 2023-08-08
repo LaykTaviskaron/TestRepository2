@@ -245,6 +245,38 @@ namespace CalendarMVCSite.Controllers
             }
         }
 
+        [HttpPost("editRecurrentMeeting")]
+        public IActionResult EditRecurrentMeeting([FromForm] CreateRecurrentMeetingModel model)
+        {
+            var validationResult = _createRecurrentMeetingValidator.Validate(model);
+            if (validationResult.IsValid)
+            {
+                try
+                {
+                    _meetingService.Edit(new RecurrencySetting
+                    {
+                        Id = model.Id,
+                        StartDate = model.StartDate.Value,
+                        EndDate = model.EndDate.Value,
+                        Name = model.Name,
+                        RepeatInterval = model.RepeatInterval,
+                        RepeatUntil = model.RepeatUntil
+                    });
+                }
+                catch (Exception e)
+                {
+                    //_logger.Log("Request failed.");
+                    _logger.LogError(e, "Request failed. Request details: {@model}", model);
+                }
+
+                return RedirectToAction("Index", "Meeting");
+            }
+            else
+            {
+                return View(model);
+            }
+        }
+
         [HttpGet("{id}")]
         public IActionResult Details(Guid id)
         {
