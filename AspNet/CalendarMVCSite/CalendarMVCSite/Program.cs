@@ -18,6 +18,7 @@ builder.Services.AddControllersWithViews(options =>
 });
 
 builder.Services.AddScoped<IMeetingsService, MeetingsService>();
+builder.Services.AddScoped<IRoomsService, RoomsService>();
 
 var logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)

@@ -7,10 +7,12 @@ namespace CalendarMVCSite.Models
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
+        public bool IsOnlineMeeting { get; set; }
 
         public DateTime? StartDate { get; set; }
 
         public DateTime? EndDate { get; set; }
+        public string RoomId { get; set; }
     }
 
     public class EditMeetingModelValidator : AbstractValidator<EditMeetingModel>
@@ -25,6 +27,11 @@ namespace CalendarMVCSite.Models
                 ? x.StartDate.Value.AddMinutes(30) <= x.EndDate.Value && x.StartDate.Value.AddHours(24) >= x.EndDate.Value
                 : true)
             .WithMessage("Start date must be smaller than End date with duration between as 30mins or more");
+
+            RuleFor(m => new { m.RoomId, m.IsOnlineMeeting }).Must(x => !x.IsOnlineMeeting
+                ? !string.IsNullOrEmpty(x.RoomId)
+                : true)
+            .WithMessage("Room should be selected for offline meeting");
         }
 
         private bool DateIsValid(DateTime? date)

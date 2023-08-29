@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
 
 namespace CalendarMVCSite.Models
@@ -6,6 +7,10 @@ namespace CalendarMVCSite.Models
     public class CreateMeetingModel
     {
         public string Name { get; set; }
+
+        public string RoomId { get; set; }
+
+        public bool IsOnlineMeeting { get; set; }
 
         public DateTime? StartDate { get; set; }
 
@@ -19,11 +24,16 @@ namespace CalendarMVCSite.Models
             RuleFor(x => x.Name).NotEmpty().MaximumLength(30).MinimumLength(2);
             RuleFor(x => x.StartDate).NotEmpty().Must(DateIsValid).WithMessage("Date must be either 15, or 30, or 45, or 00 minutes");
             RuleFor(x => x.EndDate).NotEmpty().Must(DateIsValid).WithMessage("Date must be either 15, or 30, or 45, or 00 minutes");
-
+            
             RuleFor(m => new { m.StartDate, m.EndDate }).Must(x => x.StartDate.HasValue && x.EndDate.HasValue 
                 ? x.StartDate.Value.AddMinutes(30) <= x.EndDate.Value && x.StartDate.Value.AddHours(24) >= x.EndDate.Value
                 : true)
             .WithMessage("Start date must be smaller than End date with duration between as 30mins or more");
+
+            RuleFor(m => new { m.RoomId, m.IsOnlineMeeting }).Must(x => !x.IsOnlineMeeting
+                ? !string.IsNullOrEmpty(x.RoomId)
+                : true)
+            .WithMessage("Room should be selected for offline meeting");
         }
 
         private bool DateIsValid(DateTime? date)

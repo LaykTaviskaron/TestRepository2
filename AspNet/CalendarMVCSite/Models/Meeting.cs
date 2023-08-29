@@ -12,8 +12,10 @@
 
         public DateTime EndDate { get; set; }
 
-        public Room Room { get; set; }
+        public bool IsOnlineMeeting { get; set; }
 
-        public RecurrencySetting RecurrencySetting { get; set; }
+        public Room? Room { get; set; }
+
+        public RecurrencySetting? RecurrencySetting { get; set; }
     }
 }

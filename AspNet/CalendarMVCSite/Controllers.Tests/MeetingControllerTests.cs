@@ -25,10 +25,11 @@ namespace Controllers.Tests
             var logger = new Mock<Microsoft.Extensions.Logging.ILogger<MeetingController>>();
             var dbContext = InitHelpers.GetDbContext();
             var meetingService = new Mock<IMeetingsService>();
+            var roomService = new Mock<IRoomsService>();
             var validator = new CreateMeetingModelValidator();
             var editValidator = new EditMeetingModelValidator();
 
-            var service = new MeetingController(logger.Object, dbContext.Object, meetingService.Object, validator, editValidator);
+            var service = new MeetingController(logger.Object, dbContext.Object, meetingService.Object, roomService.Object, validator, editValidator);
 
             // Act
             var result = service.Create(new CreateMeetingModel 
@@ -62,13 +63,14 @@ namespace Controllers.Tests
             var logger = new Mock<Microsoft.Extensions.Logging.ILogger<MeetingController>>();
             var dbContext = InitHelpers.GetDbContext();
             var meetingService = new Mock<IMeetingsService>();
+            var roomService = new Mock<IRoomsService>();
             //var validatorMock = new Mock<CreateMeetingModelValidator>();
             //validatorMock.Setup(c => c.Validate(model)).Verifiable();
 
             var validator = new CreateMeetingModelValidator();
             var editValidator = new EditMeetingModelValidator();
 
-            var service = new MeetingController(logger.Object, dbContext.Object, meetingService.Object, validator, editValidator);
+            var service = new MeetingController(logger.Object, dbContext.Object, meetingService.Object, roomService.Object, validator, editValidator);
 
             // Act
             var result = service.Create(model);

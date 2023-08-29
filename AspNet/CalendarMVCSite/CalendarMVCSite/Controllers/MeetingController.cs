@@ -3,6 +3,8 @@ using BusinessLogic.Interfaces;
 using CalendarMVCSite.Models;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Models;
 using Serilog;
 using Serilog.Core;
@@ -16,6 +18,7 @@ namespace CalendarMVCSite.Controllers
     {
         private readonly ILogger<MeetingController> _logger;
         private readonly IMeetingsService _meetingService;
+        private readonly IRoomsService _roomService;
         private readonly Serilog.ILogger _serilogLogger;
         private readonly IValidator<CreateMeetingModel> _createMeetingValidator;
         private readonly IValidator<EditMeetingModel> _editMeetingValidator;
@@ -23,13 +26,15 @@ namespace CalendarMVCSite.Controllers
 
         public MeetingController(
             ILogger<MeetingController> logger, 
-            CalendarDbContext calendar, 
-            IMeetingsService meetingService, 
+            CalendarDbContext calendar,
+            IMeetingsService meetingService,
+            IRoomsService roomService,
             IValidator<CreateMeetingModel> validator, 
             IValidator<EditMeetingModel> editMeetingValidator)
         {
             _logger = logger;
             _meetingService = meetingService;
+            _roomService = roomService;
             //_serilogLogger = serilogLogger;
             _createMeetingValidator = validator;
             _editMeetingValidator = editMeetingValidator;
@@ -105,7 +110,6 @@ namespace CalendarMVCSite.Controllers
             return View(model);
         }
 
-
         [HttpGet("edit/{id}")]
         public IActionResult Edit(Guid id)
         {
@@ -116,8 +120,12 @@ namespace CalendarMVCSite.Controllers
                 Id = id,
                 EndDate = meeting.EndDate,
                 StartDate = meeting.StartDate,
-                Name = meeting.Name
+                Name = meeting.Name,
+                IsOnlineMeeting = meeting.IsOnlineMeeting,
+                RoomId = meeting.Room?.Id.ToString()
             };
+
+            PopulateRoomsInViewBag();
 
             return View(meetingModel);
         }
@@ -130,12 +138,20 @@ namespace CalendarMVCSite.Controllers
             {
                 try
                 {
+                    Room room = null;
+                    if (Guid.TryParse(model.RoomId, out var roomId))
+                    {
+                        room = _roomService.GetById(roomId);
+                    }
+
                     _meetingService.Edit(new Meeting
                     {
                         Id = model.Id,
+                        IsOnlineMeeting = model.IsOnlineMeeting,
                         StartDate = model.StartDate.Value,
                         EndDate = model.EndDate.Value,
-                        Name = model.Name
+                        Name = model.Name,
+                        Room = room
                     });
                 }
                 catch (Exception e)
@@ -148,6 +164,11 @@ namespace CalendarMVCSite.Controllers
             }
             else
             {
+                foreach (var error in validationResult.Errors)
+                {
+                    ModelState.AddModelError(error.PropertyName, $"{error.PropertyName}: {error.ErrorMessage}");
+                }
+
                 return View(model);
             }
         }
@@ -179,6 +200,20 @@ namespace CalendarMVCSite.Controllers
         [HttpGet("create")]
         public IActionResult Create()
         {
+            _roomService.Create(new Room
+            {
+                Id = Guid.NewGuid(),
+                Name = "Room 1"
+            });
+
+            _roomService.Create(new Room
+            {
+                Id = Guid.NewGuid(),
+                Name = "Room 2"
+            });
+
+            PopulateRoomsInViewBag();
+
             return View();
         }
 
@@ -190,13 +225,21 @@ namespace CalendarMVCSite.Controllers
             {
                 try
                 {
+                    Room room = null;
+                    if (Guid.TryParse(model.RoomId, out var roomId))
+                    {
+                        room = _roomService.GetById(roomId);
+                    }
+
                     _meetingService.Create(new Meeting
                     {
                         Id = Guid.NewGuid(),
                         StartDate = model.StartDate.Value,
                         EndDate = model.EndDate.Value,
+                        IsOnlineMeeting = model.IsOnlineMeeting,
                         Name = model.Name,
-                        CreatedAt = DateTime.UtcNow
+                        CreatedAt = DateTime.UtcNow,
+                        Room = room
                     });
                 }
                 catch (Exception e)
@@ -209,6 +252,13 @@ namespace CalendarMVCSite.Controllers
             }
             else
             {
+                foreach (var error in validationResult.Errors)
+                {
+                    ModelState.AddModelError(error.PropertyName, $"{error.PropertyName}: {error.ErrorMessage}");
+                }
+
+                PopulateRoomsInViewBag();
+
                 return View(model);
             }
         }
@@ -291,6 +341,16 @@ namespace CalendarMVCSite.Controllers
             };
 
             return View(meetingModel);
+        }
+
+        private void PopulateRoomsInViewBag()
+        {
+            var allRooms = _roomService.GetAll();
+            var optionsList = allRooms
+                .Select(x => new SelectListItem(x.Name, x.Id.ToString()))
+                .ToList();
+
+            ViewBag.Rooms = (IEnumerable<SelectListItem>)optionsList;
         }
     }
 }

@@ -22,6 +22,14 @@
             <label asp-for="EndDate">End:</label>
             <input type="datetime-local" asp-for="EndDate" />
         </div>
+        <div class="myforma">
+            <label asp-for="IsOnlineMeeting">Online:</label>
+            <input type="checkbox" asp-for="IsOnlineMeeting" />
+        </div>
+        <div class="myforma">
+            <label asp-for="RoomId">Room:</label>
+            @Html.DropDownListFor(m => m.RoomId, (IEnumerable<SelectListItem>)ViewBag.Rooms, "Select room...")
+        </div>
         <div>
             <p></p>
                 <button type="submit">Create</button>

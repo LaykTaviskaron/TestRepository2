@@ -1,6 +1,8 @@
 ﻿using BusinessLogic.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Models;
+using NuGet.Configuration;
+using System.Collections.ObjectModel;
 
 namespace BusinessLogic.Services
 {
@@ -15,12 +17,17 @@ namespace BusinessLogic.Services
 
         public IEnumerable<Meeting> GetAll()
         {
-            return _calendar.Meetings.ToList();
+            var meetingsWithRooms = _calendar.Meetings.Include(x => x.Room);
+
+            return meetingsWithRooms;
         }
 
         public Meeting GetById(Guid id)
         {
-            var result = _calendar.Meetings.FirstOrDefault(x => x.Id == id);
+            var result = _calendar.Meetings
+                .Include(x => x.Room)
+                .FirstOrDefault(x => x.Id == id);
+
             if (result == null)
             {
                 throw new ArgumentException("No such id exists");
