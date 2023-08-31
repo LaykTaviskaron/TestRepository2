@@ -130,6 +130,7 @@ namespace BusinessLogic.Tests
             Assert.Equal(result.StartDate, updatedMeeting.StartDate);
             Assert.Equal(result.EndDate, updatedMeeting.EndDate);
             Assert.Equal(result.Room, updatedMeeting.Room);
+            Assert.Equal(result.IsOnlineMeeting, updatedMeeting.IsOnlineMeeting);
 
             Assert.Equal(2, mockContext.Object.Meetings.Count());
         }
@@ -188,7 +189,8 @@ namespace BusinessLogic.Tests
                 EndDate = startDate.AddMinutes(30),
                 Name = "Meeting series",
                 RepeatInterval = RepeatInterval.Daily,
-                RepeatUntil = startDate.AddDays(2)
+                RepeatUntil = startDate.AddDays(2),
+                IsOnlineMeeting = true
             };
 
             var settings = new List<RecurrencySetting> { recurrencySetting };
@@ -201,7 +203,8 @@ namespace BusinessLogic.Tests
                     Name = "Meeting series",
                     EndDate = startDate.AddDays(1).AddMinutes(30),
                     StartDate = startDate.AddDays(1),
-                    RecurrencySetting = recurrencySetting
+                    RecurrencySetting = recurrencySetting,
+                    IsOnlineMeeting = true
                 },
                 new Meeting()
                 {
@@ -209,7 +212,8 @@ namespace BusinessLogic.Tests
                     Name = "Meeting series",
                     EndDate = startDate.AddDays(2).AddMinutes(30),
                     StartDate = startDate.AddDays(2),
-                    RecurrencySetting = recurrencySetting
+                    RecurrencySetting = recurrencySetting,
+                    IsOnlineMeeting = true
                 }
             };
 
@@ -229,7 +233,8 @@ namespace BusinessLogic.Tests
                 StartDate = startDate.AddDays(-2),
                 Name = "Updated meeting series",
                 RepeatInterval = RepeatInterval.Daily,
-                RepeatUntil = startDate
+                RepeatUntil = startDate,
+                IsOnlineMeeting = false
             });
 
             //Assert
@@ -244,12 +249,14 @@ namespace BusinessLogic.Tests
             Assert.Equal(recurrencySetting.RepeatInterval, recurrencySettingsFromDB.RepeatInterval);
             Assert.Equal(recurrencySetting.RepeatUntil, recurrencySettingsFromDB.RepeatUntil);
             Assert.Equal(recurrencySetting.Room, recurrencySettingsFromDB.Room);
+            Assert.Equal(recurrencySetting.IsOnlineMeeting, recurrencySettingsFromDB.IsOnlineMeeting);
 
             Assert.Equal(3, mockContext.Object.Meetings.Count());
             foreach (var meeting in mockContext.Object.Meetings)
             {
                 Assert.Equal(meeting.Name, recurrencySettingsFromDB.Name);
                 Assert.Equal(meeting.Room, recurrencySettingsFromDB.Room);
+                Assert.Equal(meeting.IsOnlineMeeting, recurrencySettingsFromDB.IsOnlineMeeting);
                 Assert.Equal(meeting.RecurrencySetting, recurrencySettingsFromDB);
             }
         }
@@ -322,12 +329,14 @@ namespace BusinessLogic.Tests
             Assert.Equal(recurrencySetting.RepeatInterval, recurrencySettingsFromDB.RepeatInterval);
             Assert.Equal(recurrencySetting.RepeatUntil, recurrencySettingsFromDB.RepeatUntil);
             Assert.Equal(recurrencySetting.Room, recurrencySettingsFromDB.Room);
+            Assert.Equal(recurrencySetting.IsOnlineMeeting, recurrencySettingsFromDB.IsOnlineMeeting);
 
             Assert.Equal(1, mockContext.Object.Meetings.Count());
             foreach (var meeting in mockContext.Object.Meetings)
             {
                 Assert.Equal(meeting.Name, recurrencySettingsFromDB.Name);
                 Assert.Equal(meeting.Room, recurrencySettingsFromDB.Room);
+                Assert.Equal(meeting.IsOnlineMeeting, recurrencySettingsFromDB.IsOnlineMeeting);
                 Assert.Equal(meeting.RecurrencySetting, recurrencySettingsFromDB);
             }
         }

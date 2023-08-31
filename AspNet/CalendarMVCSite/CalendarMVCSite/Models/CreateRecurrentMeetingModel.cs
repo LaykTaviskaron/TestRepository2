@@ -10,6 +10,11 @@ namespace CalendarMVCSite.Models
 
         public string Name { get; set; }
 
+        public string RoomId { get; set; }
+
+        public bool IsOnlineMeeting { get; set; }
+
+
         public DateTime? StartDate { get; set; }
 
         public DateTime? EndDate { get; set; }

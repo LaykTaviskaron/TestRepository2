@@ -10,6 +10,8 @@
 
         public DateTime EndDate { get; set; }
 
+        public bool IsOnlineMeeting { get; set; }
+
         public Room Room { get; set; }
 
         public RepeatInterval RepeatInterval { get; set; }

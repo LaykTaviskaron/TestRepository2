@@ -130,6 +130,16 @@ namespace CalendarMVCSite.Controllers
             return View(meetingModel);
         }
 
+        private Room GetRoomById(string roomId)
+        {
+            if (Guid.TryParse(roomId, out var parsedRoomId))
+            {
+                return _roomService.GetById(parsedRoomId);
+            }
+
+            return null;
+        }
+
         [HttpPost("edit/{id}")]
         public IActionResult Edit(Guid id, [FromForm] EditMeetingModel model)
         {
@@ -138,11 +148,7 @@ namespace CalendarMVCSite.Controllers
             {
                 try
                 {
-                    Room room = null;
-                    if (Guid.TryParse(model.RoomId, out var roomId))
-                    {
-                        room = _roomService.GetById(roomId);
-                    }
+                    var room = GetRoomById(model.RoomId);
 
                     _meetingService.Edit(new Meeting
                     {
@@ -213,11 +219,7 @@ namespace CalendarMVCSite.Controllers
             {
                 try
                 {
-                    Room room = null;
-                    if (Guid.TryParse(model.RoomId, out var roomId))
-                    {
-                        room = _roomService.GetById(roomId);
-                    }
+                    var room = GetRoomById(model.RoomId);
 
                     _meetingService.Create(new Meeting
                     {
@@ -259,14 +261,18 @@ namespace CalendarMVCSite.Controllers
             {
                 try
                 {
+                    var room = GetRoomById(model.RoomId);
+
                     _meetingService.Create(new RecurrencySetting
                     {
                         Id = Guid.NewGuid(),
                         StartDate = model.StartDate.Value,
                         EndDate = model.EndDate.Value,
                         Name = model.Name,
+                        IsOnlineMeeting = model.IsOnlineMeeting,
                         RepeatInterval = model.RepeatInterval,
-                        RepeatUntil = model.RepeatUntil
+                        RepeatUntil = model.RepeatUntil,
+                        Room = room
                     });
                 }
                 catch (Exception e)
@@ -291,6 +297,8 @@ namespace CalendarMVCSite.Controllers
             {
                 try
                 {
+                    var room = GetRoomById(model.RoomId);
+
                     _meetingService.Edit(new RecurrencySetting
                     {
                         Id = model.Id,
@@ -298,7 +306,9 @@ namespace CalendarMVCSite.Controllers
                         EndDate = model.EndDate.Value,
                         Name = model.Name,
                         RepeatInterval = model.RepeatInterval,
-                        RepeatUntil = model.RepeatUntil
+                        RepeatUntil = model.RepeatUntil,
+                        IsOnlineMeeting = model.IsOnlineMeeting,
+                        Room = room
                     });
                 }
                 catch (Exception e)
