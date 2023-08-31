@@ -200,18 +200,6 @@ namespace CalendarMVCSite.Controllers
         [HttpGet("create")]
         public IActionResult Create()
         {
-            _roomService.Create(new Room
-            {
-                Id = Guid.NewGuid(),
-                Name = "Room 1"
-            });
-
-            _roomService.Create(new Room
-            {
-                Id = Guid.NewGuid(),
-                Name = "Room 2"
-            });
-
             PopulateRoomsInViewBag();
 
             return View();

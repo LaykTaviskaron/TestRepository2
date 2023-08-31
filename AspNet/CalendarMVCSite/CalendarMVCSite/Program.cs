@@ -1,4 +1,4 @@
-using BusinessLogic;
+﻿using BusinessLogic;
 using BusinessLogic.Services;
 using BusinessLogic.Interfaces;
 using CalendarMVCSite.Filters;
@@ -62,7 +62,9 @@ static void ConfigureServices(IServiceCollection services, IConfiguration config
 {
     services.AddDbContext<CalendarDbContext>(options =>
     {
-        options.UseInMemoryDatabase("PersonDbContext");
+        //options.UseInMemoryDatabase("PersonDbContext");
+        
+        options.UseSqlServer("Server=localhost;Database=MeetingsDb;Integrated Security=true;TrustServerCertificate=True;");
     });
 
     services.AddScoped<IValidator<CreateMeetingModel>, CreateMeetingModelValidator>();
