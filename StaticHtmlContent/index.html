@@ -1,0 +1,144 @@
+<html>
+<head>
+    <title>
+        Beetroot academy
+    </title>
+    <link href="Styles\main.css" rel="stylesheet">
+</head>
+<body id="bodyId" onclick="">
+    <form id="userForm">
+        <label>Login: </label>
+        <input id="login" required />
+        <br />
+        <label>Password: </label>
+        <input id="password" placeholder="not bigger than 10 symbols" type="password" required maxlength="10" />
+        <br />
+        <label>Date of birth: </label>
+        <input id="dateOfBirth" type="date" />
+        <br />
+        <label>Email: </label>
+        <input id="email" type="email" />
+        <br />
+        <label>Year of birth: </label>
+        <input id="yearOfBirth" type="number" min="1900" max="2020" />
+        <br />
+        <label>Color of product: </label>
+        <input id="color" type="color" />
+        <br />        
+        <label>Delivery: </label>
+        <input type="radio" id="newPost" name="delivery" value="NovaPoshta" />
+        <label for="newPost">Nova Poshta</label>
+        <input type="radio" id="yourself" name="delivery" value="Yourself" />
+        <label for="yourself">Samostiyno</label>
+        <input type="radio" id="courier" name="delivery" value="Courier" />
+        <label for="courier">Courier</label>
+        <br />
+        <label>Inform me: </label>
+        <input id="sendEmail" type="checkbox" value="SendEmail" />
+        <label>Via email</label>
+        <input id="sendSms" type="checkbox" value="SendSms" />
+        <label>Via sms</label>
+        <input id="sendViber" type="checkbox" value="SendViber" />
+        <label>Via Viber</label>
+        <br />
+        <label>Attachment: </label>
+        <input id="file" type="file" />
+        <br />
+        <input id="hiddenField" type="hidden" value="uncahged value" />
+        <br />
+
+        <input type="button" value="Cancel" id="cancel" alt="description of button" onlick="saveToLocalstorage('test', 'test value')">
+        <input type="submit" id="submitForm" value="Send Request">
+    </form>
+    <script>
+
+        function saveForm(e) {
+            debugger;
+
+            let login = getElementValue("login");
+            let pass = getElementValue("password");
+            let email = getElementValue("email");
+            let dateOfBirth = getElementValue("dateOfBirth");
+            let color = getElementValue("color");
+            let yearOfBirth = getElementValue("yearOfBirth");
+            let file = getElementValue("file");
+            let hiddenField = getElementValue("hiddenField");
+
+
+            let delivery = getRadioButtonValue("newPost", "yourself", "courier");
+            if (isItemChecked("sendSms")) {
+                let sendSms = getElementValue("sendSms");
+            }
+            if (isItemChecked("sendViber")) {
+                let sendViber = getElementValue("sendViber");
+            }
+            if (isItemChecked("sendEmail")) {
+                let sendEmail = getElementValue("sendEmail");
+            }
+
+            let userObj = {
+                login: login,
+                password: pass,
+                email: email,
+                dateOfBirth: dateOfBirth,
+                color: color,
+                yearOfBirth: yearOfBirth,
+                file: file,
+                hiddenField: hiddenField,
+                delivery: delivery
+            };
+
+            debugger;
+            let jsonVal;
+            let existingArray = getFromLocalstorage('usersArray');
+            if (existingArray === "") {
+                jsonVal = JSON.stringify([userObj]);
+            } else {
+                let arr = JSON.parse(existingArray);
+                arr.push(userObj);
+                jsonVal = JSON.stringify(arr);
+            }
+
+            saveToLocalstorage('usersArray', jsonVal);
+
+            return true;
+        }
+
+        function isItemChecked(id) {
+            return document.getElementById(id).checked;
+        }
+
+        function getRadioButtonValue(a, b, c) {
+            if (document.getElementById(a).checked) {
+                return getElementValue(a);
+            } else if (document.getElementById(b).checked) {
+                return getElementValue(b);
+            } else if (document.getElementById(c).checked) {
+                return getElementValue(c);
+            }
+
+            return;
+        }
+
+        function getElementValue(elementId) {
+            return document.getElementById(elementId).value;
+        }
+
+        function saveToLocalstorage(key, value) {
+            debugger;
+
+            localStorage.setItem(key, value);
+        }
+
+        function getFromLocalstorage(key) {
+            debugger;
+
+            return localStorage.getItem(key);
+        }
+
+        document.getElementById("cancel").onclick = saveToLocalstorage;
+        document.getElementById("submitForm").onclick = saveForm;
+
+    </script>
+</body>
+</html>
