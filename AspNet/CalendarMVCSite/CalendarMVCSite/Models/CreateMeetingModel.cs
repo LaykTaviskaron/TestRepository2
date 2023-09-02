@@ -4,6 +4,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace CalendarMVCSite.Models
 {
+    // 1. frontend creates model A or model B
+    // 2. frontend creates model A, and backend decides which meeting type to create 
+
     public class CreateMeetingModel
     {
         public string Name { get; set; }
@@ -11,6 +14,9 @@ namespace CalendarMVCSite.Models
         public string RoomId { get; set; }
 
         public bool IsOnlineMeeting { get; set; }
+
+        public bool IsRecurrentMeeting { get; set; }
+
 
         public DateTime? StartDate { get; set; }
 

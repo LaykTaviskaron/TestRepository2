@@ -29,7 +29,8 @@ namespace CalendarMVCSite.Controllers
             CalendarDbContext calendar,
             IMeetingsService meetingService,
             IRoomsService roomService,
-            IValidator<CreateMeetingModel> validator, 
+            IValidator<CreateMeetingModel> validator,
+            IValidator<CreateRecurrentMeetingModel> createRecurrentMeetingValidator,
             IValidator<EditMeetingModel> editMeetingValidator)
         {
             _logger = logger;
@@ -38,6 +39,7 @@ namespace CalendarMVCSite.Controllers
             //_serilogLogger = serilogLogger;
             _createMeetingValidator = validator;
             _editMeetingValidator = editMeetingValidator;
+            _createRecurrentMeetingValidator = createRecurrentMeetingValidator;
         }
 
         [HttpGet("")]
@@ -45,7 +47,7 @@ namespace CalendarMVCSite.Controllers
         {
             var model = new IndexViewModel();
 
-            var meetings = _meetingService.GetAll();
+            var meetings = _meetingService.GetAll().OrderBy(x => x.StartDate);
 
             model.Meetings = meetings;
 
@@ -205,6 +207,14 @@ namespace CalendarMVCSite.Controllers
 
         [HttpGet("create")]
         public IActionResult Create()
+        {
+            PopulateRoomsInViewBag();
+
+            return View();
+        }
+
+        [HttpGet("createRecurrentMeeting")]
+        public IActionResult CreateRecurrentMeeting()
         {
             PopulateRoomsInViewBag();
 

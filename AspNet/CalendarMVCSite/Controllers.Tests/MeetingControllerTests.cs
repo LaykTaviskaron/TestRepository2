@@ -28,8 +28,9 @@ namespace Controllers.Tests
             var roomService = new Mock<IRoomsService>();
             var validator = new CreateMeetingModelValidator();
             var editValidator = new EditMeetingModelValidator();
+            var recurrentValidator = new CreateRecurrentMeetingModelValidator();
 
-            var service = new MeetingController(logger.Object, dbContext.Object, meetingService.Object, roomService.Object, validator, editValidator);
+            var service = new MeetingController(logger.Object, dbContext.Object, meetingService.Object, roomService.Object, validator, recurrentValidator, editValidator);
 
             // Act
             var result = service.Create(new CreateMeetingModel 
@@ -69,8 +70,9 @@ namespace Controllers.Tests
 
             var validator = new CreateMeetingModelValidator();
             var editValidator = new EditMeetingModelValidator();
+            var recurrentValidator = new CreateRecurrentMeetingModelValidator();
 
-            var service = new MeetingController(logger.Object, dbContext.Object, meetingService.Object, roomService.Object, validator, editValidator);
+            var service = new MeetingController(logger.Object, dbContext.Object, meetingService.Object, roomService.Object, validator, recurrentValidator, editValidator);
 
             // Act
             var result = service.Create(model);

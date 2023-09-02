@@ -69,4 +69,5 @@ static void ConfigureServices(IServiceCollection services, IConfiguration config
 
     services.AddScoped<IValidator<CreateMeetingModel>, CreateMeetingModelValidator>();
     services.AddScoped<IValidator<EditMeetingModel>, EditMeetingModelValidator>();
+    services.AddScoped<IValidator<CreateRecurrentMeetingModel>, CreateRecurrentMeetingModelValidator>();
 }

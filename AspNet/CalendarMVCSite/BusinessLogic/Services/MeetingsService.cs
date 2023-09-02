@@ -215,7 +215,7 @@ namespace BusinessLogic.Services
                     Id = Guid.NewGuid(),
                     Name = setting.Name,
                     StartDate = calculatedDate,
-                    EndDate = calculatedDate.AddMinutes(meetingDuration.Minutes),
+                    EndDate = calculatedDate.Add(meetingDuration),
                     CreatedAt = DateTime.UtcNow,
                     RecurrencySetting = setting,
                     Room = setting.Room,

@@ -38,7 +38,6 @@ namespace CalendarMVCSite.Models
                 ? x.StartDate.Value.AddMinutes(30) <= x.EndDate.Value && x.StartDate.Value.AddHours(24) >= x.EndDate.Value
                 : true)
             .WithMessage("Start date must be smaller than End date with duration between as 30mins or more");
-
         }
 
         private bool DateIsValid(DateTime? date)
